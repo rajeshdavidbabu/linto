@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
+import { Button } from "./ui/button";
 
 export function LintoView({ profile }: Profile) {
   const items = [
@@ -60,7 +61,7 @@ export function LintoView({ profile }: Profile) {
   ];
 
   return (
-    <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
+    <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem] transform scale-95">
       {items.map((item, i) => (
         <BentoGridItem
           key={i}
@@ -102,7 +103,7 @@ interface Profile {
 
 
 const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black"></div>
+  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border  dark:border-white/[0.2] bg-neutral-100 dark:bg-black"></div>
 );
 
 const SkeletonOne = ({profile}:Profile) => {
@@ -321,6 +322,18 @@ const SkeletonFive = ({profile}:Profile) => {
       },
     },
   };
+  const variantsThird = {
+    initial: {
+      x: 0,
+    },
+    animate: {
+      x: -0,
+      rotate: 362,
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
 
   return (
     <motion.div
@@ -347,6 +360,16 @@ const SkeletonFive = ({profile}:Profile) => {
       >
         <p className="text-xs">People following: {profile?.follower_count || "999"}</p>
         <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
+      </motion.div>
+      <motion.div
+        variants={variantsThird}
+        className="flex flex-row rounded-full items-center justify-center pt-4 space-x-2 w-full ml-auto"
+      >
+        <Button type="submit" onClick={
+          () => {
+            window.open(profile.linkedin_profile_url+"recent-activity/all/", "_blank")
+          }
+        } variant="outline" size="default" className="w-full"> Check latest Activity</Button>
       </motion.div>
     </motion.div>
   );
