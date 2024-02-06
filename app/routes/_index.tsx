@@ -78,7 +78,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
     const { data: insertedData, error } = await supabase
       .from("linkedin-profile")
-      .insert([data]);
+      .upsert(data)
+      .select();
 
     console.log("data from database ", data);
     if (insertedData && insertedData.length > 0) {
