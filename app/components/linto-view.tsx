@@ -8,10 +8,60 @@ import {
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
+import { Button } from "./ui/button";
 
-export function LintoView() {
+export function LintoView({ profile }: Profile) {
+  const items = [
+    {
+      title: profile?.first_name || 'XXXX'+ " " + profile?.first_name || 'XXXX',
+      description: (
+        <span className="text-sm">
+          {profile?.headline || 'XXXX'}
+        </span>
+      ),
+      header: <SkeletonOne profile={profile}/>,
+    },
+    {
+      title: "Current Location",
+      description: <span className="text-sm">📍 {profile?.city || 'XXXX'}, {profile?.country_full_name || 'XXXX'}</span>,
+      header: <SkeletonTwo profile={profile}/>,
+      className: "md:col-span-1",
+    },
+    {
+      title: profile.occupation || 'XXXX',
+      description: (
+        <span className="text-sm">
+          {profile.first_name} is currently working at {profile.experience_one.company} since {profile.experience_one.starts_at.year}. {profile.experience_one.company} is located in {profile.experience_one.location}.
+        </span>
+      ),
+      header: <SkeletonThree profile={profile}/>,
+      className: "md:col-span-1",
+    },
+    {
+      title: "Work Experience",
+      description: (
+        <span className="text-sm">
+          {profile?.first_name || 'XXXX'} has an array of work experience.
+        </span>
+      ),
+      header: <SkeletonFour profile={profile}/>,
+      className: "md:col-span-2",
+    },
+  
+    {
+      title: "Contact Information",
+      description: (
+        <span className="text-sm">
+          You can contact {profile.first_name} on <a className="text-purple-600" href={profile.linkedin_profile_url} target="_blank">Linked-In</a>.
+        </span>
+      ),
+      header: <SkeletonFive profile={profile}/>,
+      className: "md:col-span-1",
+    },
+  ];
+
   return (
-    <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
+    <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem] transform scale-95">
       {items.map((item, i) => (
         <BentoGridItem
           key={i}
@@ -19,17 +69,44 @@ export function LintoView() {
           description={item.description}
           header={item.header}
           className={cn("[&>p:text-lg]", item.className)}
-          icon={item.icon}
         />
       ))}
     </BentoGrid>
   );
 }
+
+interface Experience {
+  starts_at?: string;
+  ends_at?: string;
+  company?: string;
+  company_linkedin_profile_url?: string;
+  title?: string;
+  location?: string;
+  logo_url?: string;
+}
+
+interface Profile {
+  [key: string]: any; // Allows for any other properties without specific typing
+  first_name?: string; // Optional, based on your JSON structure
+  last_name?: string; // Optional, based on your JSON structure
+  occupation?: string; // Optional, based on your JSON structure
+  follower_count?: number; // Optional, based on your JSON structure
+  linkedin_profile_url?: string; // Optional, based on your JSON structure
+  country_full_name?: string; // Optional, based on your JSON structure
+  city?: string; // Optional, based on your JSON structure
+  experience_one? : Experience;
+  experience_two? : Experience;
+  experience_three? : Experience;
+  headline?: string; // Optional, based on your JSON structure
+  profile_pic_url?: string; // Optional, based on your JSON structure
+}
+
+
 const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl   dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black"></div>
+  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border  dark:border-white/[0.2] bg-neutral-100 dark:bg-black"></div>
 );
 
-const SkeletonOne = () => {
+const SkeletonOne = ({profile}:Profile) => {
   const variants = {
     initial: {
       x: 0,
@@ -66,7 +143,7 @@ const SkeletonOne = () => {
         className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2  items-center space-x-2 bg-white dark:bg-black"
       >
         <img
-          src="https://media.licdn.com/dms/image/D4E03AQH7YWRzqGl-mQ/profile-displayphoto-shrink_800_800/0/1702722574537?e=1712793600&v=beta&t=st6wksj_3qKajVaiOL51-mMD7F-2lzJjybsTtrKXzZ8"
+          src={profile.profile_pic_url}
           alt="avatar"
           height={150}
           width={150}
@@ -76,7 +153,8 @@ const SkeletonOne = () => {
     </motion.div>
   );
 };
-const SkeletonTwo = () => {
+
+const SkeletonTwo = ({profile}:Profile) => {
   const variants = {
     initial: {
       width: 0,
@@ -94,25 +172,27 @@ const SkeletonTwo = () => {
       },
     },
   };
+  
+  const pic = "https://source.unsplash.com/featured/300x201?+" + profile?.city;
   const arr = new Array(6).fill(0);
   return (
     <motion.div
       initial="initial"
       animate="animate"
       whileHover="hover"
-      className="flex flex-1 w-full overflow-hidden h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2"
-    >
-      <img
-        src="https://gisgeography.com/wp-content/uploads/2023/02/Hamburg-Things-To-Do.jpg"
+      className="flex flex-1 w-full h-full min-h-[6rem] dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex-col space-y-2"
+    >  
+    <img
+        src={pic}
         alt="avatar"
         height={"100%"}
         width={"100%"}
-        className="rounded-sm h-auto w-auto"
-      />
+        className="rounded-sm h-full w-auto"
+      />    
     </motion.div>
   );
 };
-const SkeletonThree = () => {
+const SkeletonThree = ({profile}:Profile) => {
   const variants = {
     initial: {
       backgroundPosition: "0 50%",
@@ -142,7 +222,7 @@ const SkeletonThree = () => {
     </motion.div>
   );
 };
-const SkeletonFour = () => {
+const SkeletonFour = ({profile}:Profile) => {
   const first = {
     initial: {
       x: 20,
@@ -175,27 +255,27 @@ const SkeletonFour = () => {
         className="h-full w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center"
       >
         <img
-          src="https://media.licdn.com/dms/image/C560BAQH03e0VowA5sQ/company-logo_400_400/0/1631438990121?e=1713398400&v=beta&t=0UzneUNfua0KMV2C9i9rlfEpeYnmV1lf74wapL4HY_Y"
+          src={profile.experience_two?.logo_url || 'https://internwise.s3.eu-west-2.amazonaws.com/uploads/default_company.png'}
           alt="avatar"
           height="100"
           width="100"
           className="rounded-full h-10 w-10"
         />
-        <p className="border border-red-500 bg-red-100 dark:bg-red-900/20 text-red-600 text-xs rounded-full px-2 py-0.5 mt-4">
-          Stealth Startup
+        <p className="border border-pink-500 bg-pink-100 dark:bg-pink-900/20 text-pink-600 text-xs rounded-full px-2 py-0.5 mt-4">
+          {profile.experience_two?.company || 'XXXX'}
         </p>
       </motion.div>
       <motion.div className="h-full relative z-20 w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center">
         <img
-          src="https://media.licdn.com/dms/image/D4E0BAQEImmp4GLeS5g/company-logo_400_400/0/1688467533747/pino_gmbh_logo?e=1713398400&v=beta&t=8TZTVSA21m7TXoqzstORniTECZXM2Q4IJYRmEhYwZW4"
+          src={profile.experience_one?.logo_url || 'https://internwise.s3.eu-west-2.amazonaws.com/uploads/default_company.png'}
           alt="avatar"
           height="100"
           width="100"
           className="rounded-full h-10 w-10"
         />
 
-        <p className="border border-green-500 bg-green-100 dark:bg-green-900/20 text-green-600 text-xs rounded-full px-2 py-0.5 mt-4">
-          PINO GmbH
+        <p className="border border-emerald-500 bg-emerald-100 dark:bg-emerald-900/20 text-emerald-600 text-xs rounded-full px-2 py-0.5 mt-4">
+          {profile.experience_one?.company || 'XXXX'}
         </p>
       </motion.div>
       <motion.div
@@ -203,21 +283,21 @@ const SkeletonFour = () => {
         className="h-full w-1/3 rounded-2xl bg-white p-4 dark:bg-black dark:border-white/[0.1] border border-neutral-200 flex flex-col items-center justify-center"
       >
         <img
-          src="https://media.licdn.com/dms/image/C4D0BAQGtQW3kf4NWoQ/company-logo_400_400/0/1630557282181/voltaroenergy_logo?e=1713398400&v=beta&t=N5jNYFoVPsbo6hWbtgx86WrPBLhlhDD2knthReer-Kk"
+          src={profile.experience_three?.logo_url || 'https://internwise.s3.eu-west-2.amazonaws.com/uploads/default_company.png'}
           alt="avatar"
           height="100"
           width="100"
           className="rounded-full h-10 w-10"
         />
 
-        <p className="border border-orange-500 bg-orange-100 dark:bg-orange-900/20 text-orange-600 text-xs rounded-full px-2 py-0.5 mt-4">
-          Voltaro
+        <p className="border border-amber-500 bg-amber-100 dark:bg-amber-900/20 text-amber-600 text-xs rounded-full px-2 py-0.5 mt-4">
+        {profile.experience_three?.company || 'XXXX'}
         </p>
       </motion.div>
     </motion.div>
   );
 };
-const SkeletonFive = () => {
+const SkeletonFive = ({profile}:Profile) => {
   const variants = {
     initial: {
       x: 0,
@@ -242,6 +322,18 @@ const SkeletonFive = () => {
       },
     },
   };
+  const variantsThird = {
+    initial: {
+      x: 0,
+    },
+    animate: {
+      x: -0,
+      rotate: 362,
+      transition: {
+        duration: 0.3,
+      },
+    },
+  };
 
   return (
     <motion.div
@@ -254,71 +346,31 @@ const SkeletonFive = () => {
         className="flex flex-row rounded-2xl border border-neutral-100 dark:border-white/[0.2] p-2  items-center space-x-2 bg-white dark:bg-black"
       >
         <img
-          src="https://media.licdn.com/dms/image/D4E03AQH7YWRzqGl-mQ/profile-displayphoto-shrink_800_800/0/1702722574537?e=1712793600&v=beta&t=st6wksj_3qKajVaiOL51-mMD7F-2lzJjybsTtrKXzZ8"
+          src={profile.profile_pic_url}
           alt="avatar"
           height="100"
           width="100"
           className="rounded-full h-10 w-10"
         />
-        <p className="text-xs">noah.rassi@hotmail.com</p>
+        <p className="text-xs">Hi, nice to meet you!</p>
       </motion.div>
       <motion.div
         variants={variantsSecond}
         className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2 items-center justify-end space-x-2 w-3/4 ml-auto bg-white dark:bg-black"
       >
-        <p className="text-xs">+49 176 123 456 78</p>
+        <p className="text-xs">People following: {profile?.follower_count || "999"}</p>
         <div className="h-6 w-6 rounded-full bg-gradient-to-r from-pink-500 to-violet-500 flex-shrink-0" />
+      </motion.div>
+      <motion.div
+        variants={variantsThird}
+        className="flex flex-row rounded-full items-center justify-center pt-4 space-x-2 w-full ml-auto"
+      >
+        <Button type="submit" onClick={
+          () => {
+            window.open(profile.linkedin_profile_url+"recent-activity/all/", "_blank")
+          }
+        } variant="outline" size="default" className="w-full"> Check latest Activity</Button>
       </motion.div>
     </motion.div>
   );
 };
-const items = [
-  {
-    title: "Noah Rassi",
-    description: (
-      <span className="text-sm">
-        Founder & CEO @Leapwize - Employee First Job-Matching for GenZ 🔋 ESADE
-        | TUM | | Tech Creative 🪩 | UI Expert 📱 | Videographer 🎥
-      </span>
-    ),
-    header: <SkeletonOne />,
-  },
-  {
-    title: "Location",
-    description: <span className="text-sm">Hamburg, Germany</span>,
-    header: <SkeletonTwo />,
-    className: "md:col-span-1",
-  },
-  {
-    title: "Founder at Stealth Startup",
-    description: (
-      <span className="text-sm">
-        He is currently in the process of founding a new startup on how young
-        people would find jobs in Germany.
-      </span>
-    ),
-    header: <SkeletonThree />,
-    className: "md:col-span-1",
-  },
-  {
-    title: "Work Experience",
-    description: (
-      <span className="text-sm">
-        Noah has an array of work experience in different companies.
-      </span>
-    ),
-    header: <SkeletonFour />,
-    className: "md:col-span-2",
-  },
-
-  {
-    title: "Contact Information",
-    description: (
-      <span className="text-sm">
-        You can contact Noah via his email or phone number.
-      </span>
-    ),
-    header: <SkeletonFive />,
-    className: "md:col-span-1",
-  },
-];

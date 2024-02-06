@@ -49,7 +49,7 @@ export default function Linto() {
         <ThemeToggle />
       </nav>
       <div className="relative h-screen w-screen bg-background">
-        <LintoView />
+        <LintoView profile={data}/>
       </div>
     </section>
   );
