@@ -39,6 +39,10 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Linto() {
   const { data } = useLoaderData<typeof loader>();
 
+  if (!data) {
+    return <div>Loading profile...</div>;
+  }
+
   return (
     <section className="w-full h-screen flex flex-col">
       <nav className="flex items-center justify-between p-4 w-full">
@@ -49,7 +53,7 @@ export default function Linto() {
         <ThemeToggle />
       </nav>
       <div className="relative h-screen w-screen bg-background">
-        <LintoView />
+        <LintoView profile={data}/>
       </div>
     </section>
   );

@@ -9,7 +9,57 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "~/lib/utils";
 
-export function LintoView() {
+export function LintoView({ profile }: Profile) {
+  const items = [
+    {
+      title: profile.first_name+ " " + profile.last_name,
+      description: (
+        <span className="text-sm">
+          {profile.headline}
+        </span>
+      ),
+      header: <SkeletonOne profile={profile}/>,
+    },
+    {
+      title: "Current Location",
+      description: <span className="text-sm">📍 {profile.city}, {profile.country_full_name}</span>,
+      header: <SkeletonTwo />,
+      className: "md:col-span-1",
+    },
+    {
+      title: "Founder at Stealth Startup",
+      description: (
+        <span className="text-sm">
+          He is currently in the process of founding a new startup on how young
+          people would find jobs in Germany.
+        </span>
+      ),
+      header: <SkeletonThree />,
+      className: "md:col-span-1",
+    },
+    {
+      title: "Work Experience",
+      description: (
+        <span className="text-sm">
+          Noah has an array of work experience in different companies.
+        </span>
+      ),
+      header: <SkeletonFour />,
+      className: "md:col-span-2",
+    },
+  
+    {
+      title: "Contact Information",
+      description: (
+        <span className="text-sm">
+          You can contact Noah via his email or phone number.
+        </span>
+      ),
+      header: <SkeletonFive />,
+      className: "md:col-span-1",
+    },
+  ];
+
   return (
     <BentoGrid className="max-w-4xl mx-auto md:auto-rows-[20rem]">
       {items.map((item, i) => (
@@ -25,11 +75,38 @@ export function LintoView() {
     </BentoGrid>
   );
 }
+
+interface Experience {
+  starts_at?: string;
+  ends_at?: string;
+  company?: string;
+  company_linkedin_profile_url?: string;
+  title?: string;
+  location?: string;
+  logo_url?: string;
+}
+
+interface Profile {
+  [key: string]: any; // Allows for any other properties without specific typing
+  first_name?: string; // Optional, based on your JSON structure
+  last_name?: string; // Optional, based on your JSON structure
+  occupation?: string; // Optional, based on your JSON structure
+  follower_count?: number; // Optional, based on your JSON structure
+  linkedin_profile_url?: string; // Optional, based on your JSON structure
+  country_full_name?: string; // Optional, based on your JSON structure
+  city?: string; // Optional, based on your JSON structure
+  experience_one? : Experience;
+  experience_two? : Experience;
+  experience_three? : Experience;
+  headline?: string; // Optional, based on your JSON structure
+  profile_pic_url?: string; // Optional, based on your JSON structure
+}
+
 const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl   dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black"></div>
+  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl dark:bg-dot-white/[0.2] bg-dot-black/[0.2] [mask-image:radial-gradient(ellipse_at_center,white,transparent)]  border border-transparent dark:border-white/[0.2] bg-neutral-100 dark:bg-black"></div>
 );
 
-const SkeletonOne = () => {
+const SkeletonOne = ({profile}:Profile) => {
   const variants = {
     initial: {
       x: 0,
@@ -66,7 +143,7 @@ const SkeletonOne = () => {
         className="flex flex-row rounded-full border border-neutral-100 dark:border-white/[0.2] p-2  items-center space-x-2 bg-white dark:bg-black"
       >
         <img
-          src="https://media.licdn.com/dms/image/D4E03AQH7YWRzqGl-mQ/profile-displayphoto-shrink_800_800/0/1702722574537?e=1712793600&v=beta&t=st6wksj_3qKajVaiOL51-mMD7F-2lzJjybsTtrKXzZ8"
+          src={profile.profile_pic_url}
           alt="avatar"
           height={150}
           width={150}
@@ -76,6 +153,7 @@ const SkeletonOne = () => {
     </motion.div>
   );
 };
+
 const SkeletonTwo = () => {
   const variants = {
     initial: {
@@ -272,53 +350,3 @@ const SkeletonFive = () => {
     </motion.div>
   );
 };
-const items = [
-  {
-    title: "Noah Rassi",
-    description: (
-      <span className="text-sm">
-        Founder & CEO @Leapwize - Employee First Job-Matching for GenZ 🔋 ESADE
-        | TUM | | Tech Creative 🪩 | UI Expert 📱 | Videographer 🎥
-      </span>
-    ),
-    header: <SkeletonOne />,
-  },
-  {
-    title: "Location",
-    description: <span className="text-sm">Hamburg, Germany</span>,
-    header: <SkeletonTwo />,
-    className: "md:col-span-1",
-  },
-  {
-    title: "Founder at Stealth Startup",
-    description: (
-      <span className="text-sm">
-        He is currently in the process of founding a new startup on how young
-        people would find jobs in Germany.
-      </span>
-    ),
-    header: <SkeletonThree />,
-    className: "md:col-span-1",
-  },
-  {
-    title: "Work Experience",
-    description: (
-      <span className="text-sm">
-        Noah has an array of work experience in different companies.
-      </span>
-    ),
-    header: <SkeletonFour />,
-    className: "md:col-span-2",
-  },
-
-  {
-    title: "Contact Information",
-    description: (
-      <span className="text-sm">
-        You can contact Noah via his email or phone number.
-      </span>
-    ),
-    header: <SkeletonFive />,
-    className: "md:col-span-1",
-  },
-];
