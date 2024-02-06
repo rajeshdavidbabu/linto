@@ -5,6 +5,7 @@ import { BackgroundBeamsDemo } from "~/components/hero";
 import InputPrompt from "~/components/input-url";
 import { ActionFunctionArgs, json, redirect } from "@remix-run/node";
 import { supabase } from "~/lib/supabase.server";
+import banner from "../../public/images/demo.png";
 
 export async function action({ request }: ActionFunctionArgs) {
   const body = await request.formData();
@@ -107,6 +108,9 @@ export default function Index() {
         <BackgroundBeamsDemo>
           <InputPrompt />
         </BackgroundBeamsDemo>
+      </div>
+      <div className="w-full flex items-center justify-center">
+        <img src={banner} className="w-1/2" />
       </div>
     </section>
   );
