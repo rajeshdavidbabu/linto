@@ -1,6 +1,9 @@
 import { LoaderFunctionArgs, json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import { supabase } from "~/lib/supabase.server";
+import { LintoView } from "~/components/linto-view";
+import { Command } from "lucide-react";
+import { ThemeToggle } from "./resources.theme-toggle";
 
 export let loader = async ({ params }: LoaderFunctionArgs) => {
   const id = params.id;
@@ -36,5 +39,18 @@ export let loader = async ({ params }: LoaderFunctionArgs) => {
 export default function Linto() {
   const { data } = useLoaderData<typeof loader>();
 
-  return <>Linto page is working {JSON.stringify(data, null, 2)}</>;
+  return (
+    <section className="w-full h-screen flex flex-col">
+      <nav className="flex items-center justify-between p-4 w-full">
+        <Link to="/" className="flex items-center space-x-2">
+          <Command className="h-8 w-8" />
+          <h1 className="text-xl font-semibold">Linto</h1>
+        </Link>
+        <ThemeToggle />
+      </nav>
+      <div className="relative h-screen w-screen bg-background">
+        <LintoView />
+      </div>
+    </section>
+  );
 }

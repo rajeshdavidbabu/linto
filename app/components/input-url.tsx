@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Input } from "./ui/input";
-import { Forward } from "lucide-react";
 import { Form } from "@remix-run/react";
 import { Button } from "./ui/button";
 
 const InputPrompt = () => {
   const [input, setInput] = useState("");
+  const [isPending, setIsPending] = useState(false);
 
-  const onSubmit = () => {
-    console.log(input);
+  const addPending = () => {
+    setIsPending(true);
   };
 
   return (
@@ -25,9 +25,9 @@ const InputPrompt = () => {
         type="text"
         name="linkedinurl"
       />
-      <Button type="submit" onClick={onSubmit}>
+      <Button type="submit" onClick={addPending}>
         {" "}
-        Get Linto
+        {isPending ? "Lintoing..." : "Get Linto"}
       </Button>
     </Form>
   );
